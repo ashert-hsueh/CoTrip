@@ -72,12 +72,6 @@ frontend/
     assets/
     components/        
     pages/
-      Auth/
-      Trips.vue
-      TripDetail.vue
-      MapPlanner.vue
-      Expenses.vue
-      Itinerary.vue
     router/
     store/              
     App.vue
@@ -92,16 +86,15 @@ frontend/
 ```
 backend/
   app/
-    application/        
-    database/           
+    application/
+      models/
+    database/
+      entities/           
     persistence/
-      models/           
-      repositories/     
+      models/
     presentation/
-      api/              
-      deps.py           
-    utils/               
-    tests/              
+    utils/       
+    tests/         
     main.py             
   requirements.txt
 ```
