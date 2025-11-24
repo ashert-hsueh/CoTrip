@@ -10,7 +10,6 @@ CoTrip 是一款为 **朋友、家人、小团队** 设计的 **协同旅行规�
 ### **Frontend**
 - ⚡ Vue 3 (Composition API + TypeScript)
 - 🧩 Element Plus（UI 组件库）
-- 🎨 TailwindCSS（现代化原子化 CSS）
 - 💨 Vite（极速构建工具）
 - 🗺 AMap / 高德地图 JS SDK（路线规划与地图展示）
 
@@ -78,7 +77,6 @@ frontend/
     main.ts
   vite.config.ts
   package.json
-  tailwind.config.js
 ```
 
 ### 🧰 Backend（FastAPI）
