@@ -1,30 +1,33 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import UserManagement from './components/UserManagement.vue'
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <UserManagement />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+/* 全局样式 */
+:root {
+  /* 主要颜色变量 */
+  --primary-color: #009CC6;
+  --secondary-color: #FFA939;
+  --background-color: #F9F3EE;
+  --accent-color: #70CDE5;
+  --text-color: #333333;
+  --white: #FFFFFF;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+/* 确保页面占满整个视口 */
+#app {
+  min-height: 100vh;
 }
 </style>
