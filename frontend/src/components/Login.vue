@@ -104,6 +104,13 @@ const handleLogin = async () => {
         // 更新状态管理中的登录状态
         authStore.login(result.user_id, result.username);
         
+        // 保存完整的用户信息到 localStorage，供 Profile.vue 使用
+        localStorage.setItem('userInfo', JSON.stringify({
+          userId: result.user_id,
+          username: result.username,
+          email: result.email
+        }));
+        
         // 跳转到个人资料页面
         router.push('/user-management?tab=profile');
       } else {
