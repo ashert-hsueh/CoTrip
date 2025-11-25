@@ -31,7 +31,8 @@ async def register(request: RegisterRequest, db: Session = Depends(get_db)):
     user_service = UserService(db)
     result = user_service.register_user(request.username, request.email, request.password)
     if not result["success"]:
-        print(f"注册失败: {result['message']}, 请求参数: {request.model_dump()}")
+        sanitized_request = request.model_dump(exclude={"password"})
+        print(f"注册失败: {result['message']}, 请求参数: {sanitized_request}")
         raise HTTPException(status_code=400, detail=result["message"])
     return result
 
