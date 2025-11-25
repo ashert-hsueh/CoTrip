@@ -43,7 +43,7 @@ class UserService:
         if not self.verify_password(password, user.hashed_password):
             return {"success": False, "message": "邮箱或密码错误"}
         
-        return {"success": True, "message": "登录成功", "user_id": user.id, "username": user.username}
+        return {"success": True, "message": "登录成功", "user_id": user.id, "username": user.username, "email": user.email}
     
     def update_username(self, user_id: int, new_username: str) -> dict:
         # 检查新用户名是否已存在
