@@ -133,8 +133,13 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { updateUsername, updatePassword } from '../api/user';
+import { useAuthStore } from '../store/auth';
+
+const router = useRouter();
+const authStore = useAuthStore();
 
 const userInfo = ref<any>(null);
 const updateUsernameFormRef = ref();
@@ -278,11 +283,14 @@ const handleUpdatePassword = async () => {
 };
 
 const handleLogout = () => {
-  // 清除本地存储的用户信息
+  // Clear user info from localStorage
   localStorage.removeItem('userInfo');
   
-  // 刷新页面以更新登录状态
-  window.location.reload();
+  // Use auth store to properly clear auth state and localStorage 'auth' key
+  authStore.logout();
+  
+  // Navigate to home page
+  router.push('/');
 };
 </script>
 
