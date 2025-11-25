@@ -49,6 +49,17 @@ export const registerUser = async (data: RegisterRequest): Promise<ApiResponse> 
 // 用户登录
 export const loginUser = async (data: LoginRequest): Promise<ApiResponse> => {
   const response = await api.post('/users/login', data);
+  // Save user info to localStorage if login is successful
+  if (response.data.success) {
+    localStorage.setItem(
+      'userInfo',
+      JSON.stringify({
+        userId: response.data.user_id,
+        username: response.data.username,
+        email: data.email,
+      })
+    );
+  }
   return response.data;
 };
 
