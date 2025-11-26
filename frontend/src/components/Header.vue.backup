@@ -8,7 +8,7 @@
       <nav class="nav-menu">
         <router-link to="/" class="nav-link" :class="{ active: $route.path === '/' }">首页</router-link>
         <router-link to="/trip-planning" class="nav-link" :class="{ active: $route.path === '/trip-planning' }">旅行规划</router-link>
-        <router-link to="/ledgers" class="nav-link" :class="{ active: $route.path === '/ledgers' }">账本管理</router-link>
+        <router-link to="/expense-management" class="nav-link" :class="{ active: $route.path === '/expense-management' }">账单管理</router-link>
         <router-link to="/user-management" class="nav-link" :class="{ active: $route.path === '/user-management' }">用户管理</router-link>
       </nav>
       <div class="user-actions" v-if="!authStore.isLoggedIn">
