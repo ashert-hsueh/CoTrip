@@ -92,9 +92,6 @@
             :value="member.id"
           />
         </el-select>
-        <el-form-item__error style="margin-top: 4px;">
-          至少选择一个参与者
-        </el-form-item__error>
       </el-form-item>
 
       <!-- 发生时间 -->
@@ -147,9 +144,9 @@ import { ElMessage } from 'element-plus';
 import {
   createBillItem,
   updateBillItem,
-  BillItem,
-  BillItemCreateRequest,
-  BillItemUpdateRequest,
+  type BillItem,
+  type BillItemCreateRequest,
+  type BillItemUpdateRequest,
   BILL_TYPES
 } from '../api/ledger';
 import type { UserSimple } from '../api/ledger';
@@ -296,10 +293,10 @@ const handleSubmit = async () => {
     } else {
       // 新增模式
       const createData: BillItemCreateRequest = {
-        type: formData.value.type,
+        type: formData.value.type ?? '',
         amount: amountInCents,
-        payer_id: formData.value.payer_id,
-        participant_ids: formData.value.participant_ids,
+        payer_id: formData.value.payer_id ?? 0,
+        participant_ids: formData.value.participant_ids ?? [],
         description: formData.value.description,
         occurred_at: formData.value.occurred_at
       };

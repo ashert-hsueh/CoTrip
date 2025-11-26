@@ -213,8 +213,8 @@
                         {{ bill.payer_name }} 支付
                       </span>
                       <span class="split-info">
-                        <el-icon size="14"><Divide /></el-icon>
-                        参与 {{ bill.participants.length }} 人
+                        <el-icon size="14"><User /></el-icon>
+                          参与 {{ bill.participants.length }} 人
                       </span>
                     </div>
 
@@ -299,7 +299,6 @@ import {
   User,
   Document,
   Money,
-  Divide,
   Comment,
   Clock
 } from '@element-plus/icons-vue';
@@ -309,8 +308,8 @@ import {
   addMemberToLedger,
   removeMemberFromLedger,
   deleteBillItem,
-  LedgerDetail,
-  LedgerUpdateRequest,
+  type LedgerDetail,
+  type LedgerUpdateRequest,
   BILL_TYPES,
   formatAmount,
   formatDate
