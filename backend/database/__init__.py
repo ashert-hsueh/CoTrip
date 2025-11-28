@@ -1,0 +1,25 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from .entities.user_entity import Base as UserBase
+from .entities.ledger_entity import Base as LedgerBase
+
+# 合并所有Base类
+Base = UserBase
+
+# 创建数据库引擎
+engine = create_engine("sqlite:///cotrip.db", connect_args={"check_same_thread": False})
+
+# 创建会话工厂
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# 创建所有表
+def create_tables():
+    Base.metadata.create_all(bind=engine)
+
+# 获取数据库会话
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

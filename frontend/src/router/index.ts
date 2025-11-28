@@ -3,6 +3,8 @@ import UserManagement from '../pages/UserManagement.vue';
 import Home from '../pages/Home.vue';
 import TripPlanning from '../pages/TripPlanning.vue';
 import ExpenseManagement from '../pages/ExpenseManagement.vue';
+import LedgerListPage from '../pages/LedgerListPage.vue';
+import LedgerDetailPage from '../pages/LedgerDetailPage.vue';
 
 const routes = [
   {
@@ -24,6 +26,17 @@ const routes = [
     path: '/expense-management',
     name: 'ExpenseManagement',
     component: ExpenseManagement,
+  },
+  {
+    path: '/ledgers',
+    name: 'LedgerList',
+    component: LedgerListPage,
+  },
+  {
+    path: '/ledgers/:id',
+    name: 'LedgerDetail',
+    component: LedgerDetailPage,
+    props: true,
   },
 ];
 
