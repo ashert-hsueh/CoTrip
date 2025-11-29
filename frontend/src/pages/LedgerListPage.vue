@@ -1,13 +1,16 @@
 <template>
-  <div class="ledger-list-container">
-    <!-- 页面标题和操作区 -->
-    <div class="page-header">
-      <h1 class="page-title">我的账本</h1>
-      <el-button type="primary" @click="showCreateModal = true" style="background: #FFA939; border-color: #FFA939;">
-        <el-icon><Plus /></el-icon>
-        创建账本
-      </el-button>
-    </div>
+  <div class="ledger-list-page">
+    <Header />
+
+    <div class="ledger-list-container">
+      <!-- 页面标题和操作区 -->
+      <div class="page-header">
+        <h1 class="page-title">我的账本</h1>
+        <el-button type="primary" @click="showCreateModal = true" style="background: #FFA939; border-color: #FFA939;">
+          <el-icon><Plus /></el-icon>
+          创建账本
+        </el-button>
+      </div>
 
     <!-- 账本列表 -->
     <div class="ledgers-grid">
@@ -130,6 +133,9 @@
         </span>
       </template>
     </el-dialog>
+    </div>
+
+    <Footer />
   </div>
 </template>
 
@@ -142,11 +148,12 @@ import {
   getMyLedgers,
   createLedger,
   deleteLedger as deleteLedgerApi,
-  Ledger,
-  LedgerCreateRequest,
   formatAmount,
   formatDate
 } from '../api/ledger';
+import type { Ledger, LedgerCreateRequest } from '../api/ledger';
+import Header from '../components/Header.vue';
+import Footer from '../components/Footer.vue';
 
 const router = useRouter();
 const createFormRef = ref();
@@ -259,11 +266,17 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.ledger-list-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .ledger-list-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
-  min-height: 100vh;
+  flex: 1;
   background: #F9F3EE;
 }
 

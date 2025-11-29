@@ -38,23 +38,66 @@
         </el-select>
       </el-form-item>
 
-      <!-- 金额 -->
+      <!-- 货币和金额 -->
+      <el-row :gutter="16">
+        <el-col :span="8">
+          <el-form-item
+            label="货币"
+            prop="currency"
+            :rules="[{ required: true, message: '请选择货币', trigger: 'change' }]"
+          >
+            <el-select v-model="formData.currency" placeholder="选择货币" style="width: 100%;">
+              <el-option label="人民币 (¥)" value="CNY" />
+              <el-option label="港币 (HK$)" value="HKD" />
+              <el-option label="澳门元 (MOP)" value="MOP" />
+              <el-option label="美元 ($)" value="USD" />
+              <el-option label="欧元 (€)" value="EUR" />
+              <el-option label="英镑 (£)" value="GBP" />
+              <el-option label="澳大利亚元 (A$)" value="AUD" />
+              <el-option label="日元 (¥)" value="JPY" />
+              <el-option label="韩元 (₩)" value="KRW" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="16">
+          <el-form-item
+            label="金额"
+            prop="amount"
+            :rules="[
+              { required: true, message: '请输入金额', trigger: 'blur' },
+              { type: 'number', min: 0.01, message: '金额必须大于0', trigger: 'blur' }
+            ]"
+          >
+            <el-input
+              v-model.number="formData.amount"
+              :placeholder="`请输入金额 (${getCurrencySymbol(formData.currency || 'CNY')})`"
+              type="number"
+              step="0.01"
+              style="width: 100%;"
+            >
+              <template #prefix>
+                <span style="margin-right: 8px; color: #606266;">
+                  {{ getCurrencySymbol(formData.currency || 'CNY') }}
+                </span>
+              </template>
+            </el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <!-- 支付账户 -->
       <el-form-item
-        label="金额"
-        prop="amount"
-        :rules="[
-          { required: true, message: '请输入金额', trigger: 'blur' },
-          { type: 'number', min: 1, message: '金额必须大于0', trigger: 'blur' }
-        ]"
+        label="支付账户"
+        prop="payment_account"
+        :rules="[{ required: true, message: '请选择支付账户', trigger: 'change' }]"
       >
-        <el-input
-          v-model.number="formData.amount"
-          placeholder="请输入金额（元）"
-          prefix-icon="¥"
-          type="number"
-          step="0.01"
-          style="width: 100%;"
-        />
+        <el-select v-model="formData.payment_account" placeholder="请选择支付账户" style="width: 100%;">
+          <el-option label="现金" value="cash" />
+          <el-option label="支付宝" value="alipay" />
+          <el-option label="微信支付" value="wechat" />
+          <el-option label="银行卡" value="bank_card" />
+          <el-option label="信用卡" value="credit_card" />
+        </el-select>
       </el-form-item>
 
       <!-- 付款人 -->
@@ -171,14 +214,35 @@ const submitting = ref(false);
 const billTypes = ref(BILL_TYPES);
 
 // 表单数据
-const formData = ref<BillItemCreateRequest | BillItemUpdateRequest>({
+const formData = ref<(BillItemCreateRequest | BillItemUpdateRequest) & {
+  currency?: string;
+  payment_account?: string;
+}>({
   type: '',
   amount: 0,
   payer_id: 0,
   participant_ids: [],
   description: '',
-  occurred_at: new Date().toISOString().slice(0, 19)
+  occurred_at: new Date().toISOString().slice(0, 19),
+  currency: 'CNY',
+  payment_account: 'cash'
 });
+
+// 获取货币符号
+const getCurrencySymbol = (currency: string): string => {
+  const symbols: Record<string, string> = {
+    CNY: '¥',
+    HKD: 'HK$',
+    MOP: 'MOP$',
+    USD: '$',
+    EUR: '€',
+    GBP: '£',
+    AUD: 'A$',
+    JPY: '¥',
+    KRW: '₩'
+  };
+  return symbols[currency] || '¥';
+};
 
 // 计算属性：判断是否为编辑模式
 const isEditMode = computed(() => !!props.editingBill);
@@ -196,7 +260,9 @@ watch(
           payer_id: props.editingBill.payer_id,
           participant_ids: props.editingBill.participants.map(p => p.id),
           description: props.editingBill.description || '',
-          occurred_at: props.editingBill.occurred_at.slice(0, 19)
+          occurred_at: props.editingBill.occurred_at.slice(0, 19),
+          currency: (props.editingBill as any).currency || 'CNY',
+          payment_account: (props.editingBill as any).payment_account || 'cash'
         };
       } else {
         // 新增模式：重置表单
@@ -222,7 +288,9 @@ watch(
         payer_id: newBill.payer_id,
         participant_ids: newBill.participants.map(p => p.id),
         description: newBill.description || '',
-        occurred_at: newBill.occurred_at.slice(0, 19)
+        occurred_at: newBill.occurred_at.slice(0, 19),
+        currency: (newBill as any).currency || 'CNY',
+        payment_account: (newBill as any).payment_account || 'cash'
       };
     }
   },
@@ -237,7 +305,9 @@ const resetForm = () => {
     payer_id: 0,
     participant_ids: [],
     description: '',
-    occurred_at: new Date().toISOString().slice(0, 19)
+    occurred_at: new Date().toISOString().slice(0, 19),
+    currency: 'CNY',
+    payment_account: 'cash'
   };
 };
 
@@ -332,6 +402,22 @@ const handleSubmit = async () => {
 /* 修复标签和输入框的对齐 */
 :deep(.el-form-item__label) {
   padding-right: 12px;
+}
+
+/* 货币和金额行布局优化 */
+:deep(.el-row) {
+  margin-bottom: 20px;
+}
+
+:deep(.el-col) {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* 当货币改变时，金额输入框的符号也会相应变化 */
+:deep(.el-input__prefix) {
+  color: #606266;
+  font-size: 14px;
 }
 
 /* 优化多选框样式 */
