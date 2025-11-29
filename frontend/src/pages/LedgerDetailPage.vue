@@ -1,23 +1,37 @@
 <template>
-  <div class="ledger-detail-container">
-    <!-- 页面头部 -->
-    <div class="page-header" style="background: linear-gradient(135deg, #FFA939 0%, #FFC168 100%); color: white;">
-      <div class="header-content">
-        <div class="header-main">
-          <div class="title-section">
-            <h1 class="page-title" v-if="!editingTitle">{{ ledgerDetail?.title }}</h1>
-            <el-input
-              v-else
-              v-model="editTitleForm.title"
-              size="large"
-              placeholder="请输入账本名称"
-              @blur="cancelEditTitle"
-              @keyup.enter="saveTitle"
-              @keyup.esc="cancelEditTitle"
-              ref="titleInputRef"
-              style="width: 300px;"
-            />
-          </div>
+  <div class="ledger-detail-page">
+    <Header />
+
+    <div class="ledger-detail-container">
+      <!-- 面包屑导航 -->
+      <div class="breadcrumb-container">
+        <div class="header-content" style="padding: 20px 24px 0;">
+          <el-breadcrumb separator="/">
+            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/ledgers' }">我的账本</el-breadcrumb-item>
+            <el-breadcrumb-item>{{ ledgerDetail?.title }}</el-breadcrumb-item>
+          </el-breadcrumb>
+        </div>
+      </div>
+
+      <!-- 页面头部 -->
+      <div class="page-header" style="background: linear-gradient(135deg, #FFA939 0%, #FFC168 100%); color: white;">
+        <div class="header-content">
+          <div class="header-main">
+            <div class="title-section">
+              <h1 class="page-title" v-if="!editingTitle">{{ ledgerDetail?.title }}</h1>
+              <el-input
+                v-else
+                v-model="editTitleForm.title"
+                size="large"
+                placeholder="请输入账本名称"
+                @blur="cancelEditTitle"
+                @keyup.enter="saveTitle"
+                @keyup.esc="cancelEditTitle"
+                ref="titleInputRef"
+                style="width: 300px;"
+              />
+            </div>
           <div class="header-actions">
             <el-button
               text
@@ -132,6 +146,15 @@
                 placeholder="筛选类型"
                 size="small"
                 style="width: 120px;"
+                :popper-options="{
+                  placement: 'bottom-start',
+                  modifiers: [{
+                    name: 'offset',
+                    options: {
+                      offset: [0, 8]
+                    }
+                  }]
+                }"
               >
                 <el-option label="全部" value="" />
                 <el-option
@@ -284,6 +307,9 @@
       :editing-bill="currentEditingBill"
       @success="fetchLedgerDetail"
     />
+    </div>
+
+    <Footer />
   </div>
 </template>
 
@@ -316,6 +342,8 @@ import {
 } from '../api/ledger';
 import BillItemModal from '../components/BillItemModal.vue';
 import type { BillItem } from '../api/ledger';
+import Header from '../components/Header.vue';
+import Footer from '../components/Footer.vue';
 
 const route = useRoute();
 const titleInputRef = ref();
@@ -555,9 +583,42 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.ledger-detail-container {
+.ledger-detail-page {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.ledger-detail-container {
+  flex: 1;
   background: #F9F3EE;
+}
+
+/* 面包屑导航样式 */
+.breadcrumb-container {
+  background: #F9F3EE;
+  border-bottom: 1px solid #e9ecef;
+}
+
+:deep(.el-breadcrumb) {
+  font-size: 14px;
+}
+
+:deep(.el-breadcrumb__inner) {
+  color: #606266;
+}
+
+:deep(.el-breadcrumb__inner a) {
+  color: #606266;
+  text-decoration: none;
+}
+
+:deep(.el-breadcrumb__inner a:hover) {
+  color: #FFA939;
+}
+
+:deep(.el-breadcrumb__separator) {
+  color: #c0c4cc;
 }
 
 /* 页面头部样式 */
