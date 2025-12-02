@@ -89,12 +89,15 @@ class LedgerRepository:
 
     # 账单条目相关操作
     def create_bill_item(self, ledger_id: int, type: str, amount: int, payer_id: int,
-                        participant_ids: list, description: str = None,
+                        participant_ids: list, currency: str = "CNY",
+                        payment_account: str = "cash", description: str = None,
                         occurred_at: str = None) -> BillItemEntity:
         bill_item = BillItemEntity(
             ledger_id=ledger_id,
             type=type,
             amount=amount,
+            currency=currency,
+            payment_account=payment_account,
             payer_id=payer_id,
             description=description,
             occurred_at=occurred_at
@@ -121,8 +124,9 @@ class LedgerRepository:
         return self.db.query(BillItemEntity).filter(BillItemEntity.ledger_id == ledger_id).order_by(BillItemEntity.occurred_at.desc()).all()
 
     def update_bill_item(self, bill_item_id: int, type: str = None, amount: int = None,
-                        payer_id: int = None, participant_ids: list = None,
-                        description: str = None, occurred_at: str = None) -> BillItemEntity:
+                        currency: str = None, payment_account: str = None, payer_id: int = None,
+                        participant_ids: list = None, description: str = None,
+                        occurred_at: str = None) -> BillItemEntity:
         bill_item = self.get_bill_item_by_id(bill_item_id)
         if not bill_item:
             return None
@@ -131,6 +135,10 @@ class LedgerRepository:
             bill_item.type = type
         if amount is not None:
             bill_item.amount = amount
+        if currency is not None:
+            bill_item.currency = currency
+        if payment_account is not None:
+            bill_item.payment_account = payment_account
         if payer_id is not None:
             bill_item.payer_id = payer_id
         if description is not None:

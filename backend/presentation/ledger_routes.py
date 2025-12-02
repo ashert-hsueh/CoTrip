@@ -5,6 +5,7 @@ from datetime import datetime
 from application.ledger_service import LedgerService
 from database import get_db
 from sqlalchemy.orm import Session
+from presentation.dependencies.auth import get_current_user_id
 
 router = APIRouter(prefix="/api/ledgers", tags=["ledgers"])
 
@@ -25,26 +26,24 @@ class BillItemCreateRequest(BaseModel):
     amount: int  # 金额（分）
     payer_id: int
     participant_ids: List[int]
+    currency: str = "CNY"  # 货币，默认人民币
+    payment_account: str = "cash"  # 支付账户，默认现金
     description: Optional[str] = None
     occurred_at: Optional[datetime] = None
 
 class BillItemUpdateRequest(BaseModel):
     type: Optional[str] = None
     amount: Optional[int] = None
+    currency: Optional[str] = None
+    payment_account: Optional[str] = None
     payer_id: Optional[int] = None
     participant_ids: Optional[List[int]] = None
     description: Optional[str] = None
     occurred_at: Optional[datetime] = None
 
-# 查询参数模型
+# 查询参数模型（暂时保留，可能后续需要）
 class CurrentUserId(BaseModel):
     user_id: int
-
-# 依赖项：获取当前用户ID（简化版本，实际项目中应从JWT token中解析）
-def get_current_user_id() -> int:
-    # 这里简化处理，实际项目中应该从请求头的Authorization中解析JWT token
-    # 为了演示，暂时返回固定用户ID 1，实际使用时需要替换为真实的JWT解析逻辑
-    return 1
 
 # 创建账本
 @router.post("/")

@@ -46,6 +46,8 @@ class BillItemEntity(Base):
     ledger_id = Column(Integer, ForeignKey("ledgers.id"), nullable=False)
     type = Column(String, nullable=False)  # hotel, meal, transport, ticket, other
     amount = Column(Integer, nullable=False)  # 金额（分）
+    currency = Column(String, nullable=False, default="CNY")  # 货币
+    payment_account = Column(String, nullable=False, default="cash")  # 支付账户
     payer_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     description = Column(String, nullable=True)
     occurred_at = Column(DateTime(timezone=True), server_default=func.now())

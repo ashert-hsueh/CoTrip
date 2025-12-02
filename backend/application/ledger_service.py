@@ -159,6 +159,8 @@ class LedgerService:
             amount=request.amount,
             payer_id=request.payer_id,
             participant_ids=request.participant_ids,
+            currency=request.currency,
+            payment_account=request.payment_account,
             description=request.description,
             occurred_at=request.occurred_at
         )
@@ -199,6 +201,8 @@ class LedgerService:
             bill_item_id=bill_item_id,
             type=request.type,
             amount=request.amount,
+            currency=request.currency,
+            payment_account=request.payment_account,
             payer_id=request.payer_id,
             participant_ids=request.participant_ids,
             description=request.description,
