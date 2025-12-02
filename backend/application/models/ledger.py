@@ -65,6 +65,8 @@ class BillItemCreateRequest:
     amount: int  # 金额（分）
     payer_id: int
     participant_ids: List[int]
+    currency: str = "CNY"  # 货币，默认人民币
+    payment_account: str = "cash"  # 支付账户，默认现金
     description: Optional[str] = None
     occurred_at: Optional[datetime] = None
 
@@ -72,6 +74,8 @@ class BillItemCreateRequest:
 class BillItemUpdateRequest:
     type: Optional[str] = None
     amount: Optional[int] = None
+    currency: Optional[str] = None
+    payment_account: Optional[str] = None
     payer_id: Optional[int] = None
     participant_ids: Optional[List[int]] = None
     description: Optional[str] = None
@@ -83,6 +87,8 @@ class BillItemResponse:
     ledger_id: int
     type: str
     amount: int
+    currency: str
+    payment_account: str
     payer_id: int
     payer_name: str
     participants: List['UserSimpleResponse']
@@ -96,6 +102,8 @@ class BillItemResponse:
             ledger_id=bill_item.ledger_id,
             type=bill_item.type,
             amount=bill_item.amount,
+            currency=bill_item.currency,
+            payment_account=bill_item.payment_account,
             payer_id=bill_item.payer_id,
             payer_name=payer_name,
             participants=participants,

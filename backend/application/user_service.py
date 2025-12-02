@@ -1,6 +1,7 @@
 from passlib.context import CryptContext
 from persistence.user_repository import UserRepository
 from sqlalchemy.orm import Session
+from .security.jwt import JWTToken
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -38,12 +39,17 @@ class UserService:
         user = self.user_repository.get_user_by_email(email)
         if not user:
             return {"success": False, "message": "邮箱或密码错误"}
-        
+
         # 验证密码
         if not self.verify_password(password, user.hashed_password):
             return {"success": False, "message": "邮箱或密码错误"}
-        
-        return {"success": True, "message": "登录成功", "user_id": user.id, "username": user.username, "email": user.email}
+
+        # 生成JWT token
+        access_token = JWTToken.create_access_token(
+            data={"sub": str(user.id), "username": user.username, "email": user.email}
+        )
+
+        return {"success": True, "message": "登录成功", "user_id": user.id, "username": user.username, "email": user.email, "access_token": access_token}
     
     def update_username(self, user_id: int, new_username: str) -> dict:
         # 检查新用户名是否已存在

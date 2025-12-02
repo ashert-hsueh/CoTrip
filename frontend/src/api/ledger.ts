@@ -10,12 +10,34 @@ const api = axios.create({
 // 请求拦截器 - 添加认证信息
 api.interceptors.request.use(
   (config) => {
-    const authStore = useAuthStore();
-    if (authStore.isLoggedIn && authStore.userId) {
-      // 在实际项目中，这里应该添加JWT token到请求头
-      // config.headers.Authorization = `Bearer ${token}`;
-      console.log('当前登录用户:', authStore.userId);
+    try {
+      // 先尝试从auth store中获取token
+      const authStore = useAuthStore();
+      if (authStore.isLoggedIn && authStore.accessToken) {
+        // 添加JWT token到请求头
+        config.headers.Authorization = `Bearer ${authStore.accessToken}`;
+        console.log('当前登录用户:', authStore.userId);
+        return config;
+      }
+    } catch (error) {
+      console.error('从auth store获取token失败:', error);
     }
+
+    // 如果从auth store获取失败，尝试从localStorage中直接读取
+    try {
+      const authState = localStorage.getItem('auth');
+      if (authState) {
+        const { isLoggedIn, accessToken } = JSON.parse(authState);
+        if (isLoggedIn && accessToken) {
+          // 添加JWT token到请求头
+          config.headers.Authorization = `Bearer ${accessToken}`;
+          console.log('从localStorage获取到token');
+        }
+      }
+    } catch (error) {
+      console.error('从localStorage获取token失败:', error);
+    }
+
     return config;
   },
   (error) => {

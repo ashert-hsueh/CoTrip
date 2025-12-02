@@ -6,6 +6,24 @@ const api = axios.create({
   timeout: 10000,
 });
 
+// 请求拦截器 - 添加认证信息
+api.interceptors.request.use(
+  (config) => {
+    // 从localStorage中获取token（避免在模块加载时直接使用Pinia store）
+    const authState = localStorage.getItem('auth');
+    if (authState) {
+      const { accessToken } = JSON.parse(authState);
+      if (accessToken) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+      }
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // 用户注册请求
 interface RegisterRequest {
   username: string;
@@ -38,6 +56,8 @@ interface ApiResponse {
   message: string;
   user_id?: number;
   username?: string;
+  access_token?: string;
+  email?: string;
 }
 
 // 用户注册
@@ -56,7 +76,7 @@ export const loginUser = async (data: LoginRequest): Promise<ApiResponse> => {
       JSON.stringify({
         userId: response.data.user_id,
         username: response.data.username,
-        email: data.email,
+        email: response.data.email || data.email,
       })
     );
   }
